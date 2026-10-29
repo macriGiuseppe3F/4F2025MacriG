@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz Master 30 Esercizi - Trigonometria</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+<body class="bg-slate-900 text-slate-100 min-h-screen font-sans antialiased">
+    <!-- Header -->
+    <header class="bg-slate-800 border-b border-slate-700 sticky top-0 z-50 shadow-xl">
+        <div class="max-w-4xl mx-auto px-4 py-4 flex flex-col sm:flex-row justify-between items-center gap-4">
+            <div>
+                <h1 class="text-xl sm:text-2xl font-black text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-indigo-400">
+                    Quiz Immediato: 30 Esercizi di Trigonometria
+                </h1>
+                <p class="text-xs text-slate-400">Rispondi alle domande e verifica subito se hai fatto centro!</p>
+            </div>
+            <div class="flex items-center gap-4 bg-slate-900 px-4 py-2 rounded-xl border border-slate-700">
+                <div class="text-sm font-medium text-slate-300">Punteggio: <span id="score" class="font-bold text-cyan-400">0</span> / 30</div>
+                <div class="text-sm font-medium text-slate-300">Risposte: <span id="answered" class="font-bold text-indigo-400">0</span> / 30</div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="max-w-4xl mx-auto px-4 py-8 pb-20">
+        <div id="quiz-container" class="space-y-6">
+            <!-- Questions injected via JS -->
+        </div>
+
+        <div class="mt-10 text-center">
+            <button onclick="resetQuiz()" class="px-6 py-3 bg-indigo-600 hover:bg-indigo-500 text-white font-bold rounded-xl transition shadow-lg">
+                Ricomincia il Quiz da Capo 🔄
+            </button>
+        </div>
+    </main>
+
+    <script>
+        const questions = [
+            // ARCHI ASSOCIATI (1-6)
+            {
+                id: 1, category: "Archi Associati",
+                question: "Quanto vale $\\sin(\\pi + \\alpha)$?",
+                options: ["\\sin\\alpha", "-\\sin\\alpha", "\\cos\\alpha", "-\\cos\\alpha"],
+                correct: 1, explanation: "Nel terzo quadrante il seno è negativo e la funzione non cambia: $-\\sin\\alpha$."
+            },
+            {
+                id: 2, category: "Archi Associati",
+                question: "Quanto vale $\\cos\\left(\\frac{\\pi}{2} - \\alpha\\right)$?",
+                options: ["-\\sin\\alpha", "-\\cos\\alpha", "\\sin\\alpha", "\\cos\\alpha"],
+                correct: 2, explanation: "Per gli angoli complementari, il coseno diventa il seno del primo quadrante: $\\sin\\alpha$."
+            },
+            {
+                id: 3, category: "Archi Associati",
+                question: "Quanto vale $\\tan(\\pi - \\alpha)$?",
+                options: ["\\tan\\alpha", "-\\tan\\alpha", "\\cot\\alpha", "-\\cot\\alpha"],
+                correct: 1, explanation: "Nel secondo quadrante la tangente è negativa: $-\\tan\\alpha$."
+            },
+            {
+                id: 4, category: "Archi Associati",
+                question: "Quanto vale $\\sin\\left(\\frac{3\\pi}{2} + \\alpha\\right)$?",
+                options: ["\\sin\\alpha", "-\\sin\\alpha", "\\cos\\alpha", "-\\cos\\alpha"],
+                correct: 3, explanation: "Nel quarto quadrante il seno è negativo e con $\\frac{3\\pi}{2}$ si trasforma in coseno: $-\\cos\\alpha$."
+            },
+            {
+                id: 5, category: "Archi Associati",
+                question: "Quanto vale $\\sin\\left(\\frac{7\\pi}{6}\\right)$?",
+                options: ["\\frac{1}{2}", "-\\frac{1}{2}", "\\frac{\\sqrt{3}}{2}", "-\\frac{\\sqrt{3}}{2}"],
+                correct: 1, explanation: "$\\frac{7\\pi}{6} = \\pi + \\frac{\\pi}{6}$, quindi $-\\sin\\left(\\frac{\\pi}{6}\\right) = -\\frac{1}{2}$."
+            },
+            {
+                id: 6, category: "Archi Associati",
+                question: "Quanto vale $\\cos\\left(\\frac{5\\pi}{4}\\right)$?",
+                options: ["\\frac{\\sqrt{2}}{2}", "-\\frac{\\sqrt{2}}{2}", "\\frac{1}{2}", "-\\frac{1}{2}"],
+                correct: 1, explanation: "$\\frac{5\\pi}{4} = \\pi + \\frac{\\pi}{4}$, quindi $-\\cos\\left(\\frac{\\pi}{4}\\right) = -\\frac{\\sqrt{2}}{2}$."
+            },
+
+            // ADDIZIONE E SOTTRAZIONE (7-12)
+            {
+                id: 7, category: "Addizione e Sottrazione",
+                question: "Qual è la formula corretta di $\\sin(\\alpha + \\beta)$?",
+                options: [
+                    "\\sin\\alpha\\cos\\beta + \\cos\\alpha\\sin\\beta",
+                    "\\sin\\alpha\\cos\\beta - \\cos\\alpha\\sin\\beta",
+                    "\\cos\\alpha\\cos\\beta - \\sin\\alpha\\sin\\beta",
+                    "\\cos\\alpha\\cos\\beta + \\sin\\alpha\\sin\\beta"
+                ],
+                correct: 0, explanation: "Il seno di una somma mantiene i segni misti: $\\sin\\alpha\\cos\\beta + \\cos\\alpha\\sin\\beta$."
+            },
+            {
+                id: 8, category: "Addizione e Sottrazione",
+                question: "Qual è la formula corretta di $\\cos(\\alpha - \\beta)$?",
+                options: [
+                    "\\sin\\alpha\\cos\\beta + \\cos\\alpha\\sin\\beta",
+                    "\\cos\\alpha\\cos\\beta - \\sin\\alpha\\sin\\beta",
+                    "\\cos\\alpha\\cos\\beta + \\sin\\alpha\\sin\\beta",
+                    "\\sin\\alpha\\sin\\beta - \\cos\\alpha\\cos\\beta"
+                ],
+                correct: 2, explanation: "Il coseno di una differenza inverte il segno centrale: $\\cos\\alpha\\cos\\beta + \\sin\\alpha\\sin\\beta$."
+            },
+            {
+                id: 9, category: "Addizione e Sottrazione",
+                question: "Quanto vale $\\sin(75^\\circ)$ scomponendolo come $45^\\circ + 30^\\circ$?",
+                options: [
+                    "\\frac{\\sqrt{6} - \\sqrt{2}}{4}",
+                    "\\frac{\\sqrt{3} + 1}{2}",
+                    "\\frac{\\sqrt{6} + \\sqrt{2}}{4}",
+                    "\\frac{\\sqrt{2} - 1}{2}"
+                ],
+                correct: 2, explanation: "Applicando la formula si ottiene $\\frac{\\sqrt{6} + \\sqrt{2}}{4}$."
+            },
+            {
+                id: 10, category: "Addizione e Sottrazione",
+                question: "Quanto vale $\\cos(15^\\circ)$ scomponendolo come $45^\\circ - 30^\\circ$?",
+                options: [
+                    "\\frac{\\sqrt{6} + \\sqrt{2}}{4}",
+                    "\\frac{\\sqrt{6} - \\sqrt{2}}{4}",
+                    "\\frac{\\sqrt{3} - 1}{2}",
+                    "\\frac{1}{2}"
+                ],
+                correct: 0, explanation: "Il coseno di $15^\\circ$ è analogo al seno di $75^\\circ$: $\\frac{\\sqrt{6} + \\sqrt{2}}{4}$."
+            },
+            {
+                id: 11, category: "Addizione e Sottrazione",
+                question: "Qual è la formula di $\\tan(\\alpha + \\beta)$?",
+                options: [
+                    "\\frac{\\tan\\alpha + \\tan\\beta}{1 - \\tan\\alpha\\tan\\beta}",
+                    "\\frac{\\tan\\alpha - \\tan\\beta}{1 + \\tan\\alpha\\tan\\beta}",
+                    "\\frac{\\tan\\alpha + \\tan\\beta}{1 + \\tan\\alpha\\tan\\beta}",
+                    "\\frac{1 - \\tan\\alpha\\tan\\beta}{\\tan\\alpha + \\tan\\beta}"
+                ],
+                correct: 0, explanation: "Numeratore con segno concorde e denominatore con segno opposto: $\\frac{\\tan\\alpha + \\tan\\beta}{1 - \\tan\\alpha\\tan\\beta}$."
+            },
+            {
+                id: 12, category: "Addizione e Sottrazione",
+                question: "Sapendo che $\\sin\\alpha = \\frac{3}{5}$ con $\\alpha$ acuto, quanto vale $\\cos\\alpha$?",
+                options: ["\\frac{4}{5}", "-\\frac{4}{5}", "\\frac{3}{4}", "\\frac{3}{5}"],
+                correct: 0, explanation: "Dalla prima relazione fondamentale: $\\sqrt{1 - \\frac{9}{25}} = \\frac{4}{5}$ (positivo perché acuto)."
+            },
+
+            // DUPLICAZIONE E BISEZIONE (13-18)
+            {
+                id: 13, category: "Duplicazione e Bisezione",
+                question: "Qual è l'identità corretta per $\\sin(2\\alpha)$?",
+                options: [
+                    "\\cos^2\\alpha - \\sin^2\\alpha",
+                    "2\\sin\\alpha\\cos\\alpha",
+                    "1 - 2\\sin^2\\alpha",
+                    "\\frac{2\\tan\\alpha}{1 - \\tan^2\\alpha}"
+                ],
+                correct: 1, explanation: "La formula di duplicazione del seno è $2\\sin\\alpha\\cos\\alpha$."
+            },
+            {
+                id: 14, category: "Duplicazione e Bisezione",
+                question: "Quale tra queste NON è una formula valida per $\\cos(2\\alpha)$?",
+                options: [
+                    "\\cos^2\\alpha - \\sin^2\\alpha",
+                    "2\\cos^2\\alpha - 1",
+                    "1 - 2\\sin^2\\alpha",
+                    "2\\sin\\alpha\\cos\\alpha"
+                ],
+                correct: 3, explanation: "$2\\sin\\alpha\\cos\\alpha$ è la formula del seno del doppio arco, non del coseno."
+            },
+            {
+                id: 15, category: "Duplicazione e Bisezione",
+                question: "Se $\\cos\\alpha = -\\frac{4}{5}$ nel II quadrante, quanto vale $\\sin(2\\alpha)$?",
+                options: ["\\frac{24}{25}", "-\\frac{24}{25}", "\\frac{7}{25}", "-\\frac{7}{25}"],
+                correct: 1, explanation: "Con $\\sin\\alpha = 3/5$, abbiamo $2(3/5)(-4/5) = -\\frac{24}{25}$."
+            },
+            {
+                id: 16, category: "Duplicazione e Bisezione",
+                question: "Nello stesso caso precedente ($\\cos\\alpha = -\\frac{4}{5}$), quanto vale $\\cos(2\\alpha)$?",
+                options: ["\\frac{7}{25}", "-\\frac{7}{25}", "\\frac{24}{25}", "-\\frac{24}{25}"],
+                correct: 0, explanation: "Usando $2\\cos^2\\alpha - 1 = 2(16/25) - 1 = \\frac{7}{25}$."
+            },
+            {
+                id: 17, category: "Duplicazione e Bisezione",
+                question: "Qual è la formula di bisezione per $\\sin\\left(\\frac{\\alpha}{2}\\right)$ (nel I quadrante)?",
+                options: [
+                    "\\pm\\sqrt{\\frac{1 - \\cos\\alpha}{2}}",
+                    "\\sqrt{\\frac{1 + \\cos\\alpha}{2}}",
+                    "\\sqrt{\\frac{1 - \\cos\\alpha}{2}}",
+                    "\\frac{1 - \\cos\\alpha}{\\sin\\alpha}"
+                ],
+                correct: 2, explanation: "Per il seno la formula prevede il segno meno sotto radice: $\\sqrt{\\frac{1 - \\cos\\alpha}{2}}$."
+            },
+            {
+                id: 18, category: "Duplicazione e Bisezione",
+                question: "Quanto vale $\\sin\\left(\\frac{\\pi}{8}\\right)$?",
+                options: [
+                    "\\frac{\\sqrt{2 + \\sqrt{2}}}{2}",
+                    "\\frac{\\sqrt{2 - \\sqrt{2}}}{2}",
+                    "\\frac{\\sqrt{6} - \\sqrt{2}}{4}",
+                    "\\frac{\\sqrt{3}}{2}"
+                ],
+                correct: 1, explanation: "Applicando la bisezione a $\\frac{\\pi}{4}$ si ottiene $\\frac{\\sqrt{2 - \\sqrt{2}}}{2}$."
+            },
+
+            // EQUAZIONI GONIOMETRICHE (19-24)
+            {
+                id: 19, category: "Equazioni Goniometriche",
+                question: "Le soluzioni in $[0, 2\\pi]$ dell'equazione elementare $\\sin x = \\frac{1}{2}$ sono:",
+                options: [
+                    "\\frac{\\pi}{6} \\text{ e } \\frac{5\\pi}{6}",
+                    "\\frac{\\pi}{3} \\text{ e } \\frac{2\\pi}{3}",
+                    "\\frac{\\pi}{4} \\text{ e } \\frac{3\\pi}{4}",
+                    "\\frac{5\\pi}{6} \\text{ e } \\frac{7\\pi}{6}"
+                ],
+                correct: 0, explanation: "Il seno vale $1/2$ a $30^\\circ$ e $150^\\circ$, cioè $\\frac{\\pi}{6}$ e $\\frac{5\\pi}{6}$."
+            },
+            {
+                id: 20, category: "Equazioni Goniometriche",
+                question: "L'equazione elementare $\\cos x = -1$ in $\\mathbb{R}$ ha come soluzione generale:",
+                options: [
+                    "x = k\\pi",
+                    "x = \\pi + 2k\\pi",
+                    "x = \\frac{\\pi}{2} + k\\pi",
+                    "x = 2k\\pi"
+                ],
+                correct: 1, explanation: "Il coseno vale $-1$ esattamente nell'angolo piatto $\\pi$, con periodicità $2k\\pi$."
+            },
+            {
+                id: 21, category: "Equazioni Goniometriche",
+                question: "L'equazione $2\\sin^2 x - \\sin x - 1 = 0$ ha tra le sue soluzioni fondamentali:",
+                options: ["\\frac{\\pi}{2}", "\\frac{\\pi}{3}", "\\frac{\\pi}{4}", "\\pi"],
+                correct: 0, explanation: "Posto $t = \\sin x$, si ha $t = 1 \\implies x = \\frac{\\pi}{2}$ (e $t = -1/2$)."
+            },
+            {
+                id: 22, category: "Equazioni Goniometriche",
+                question: "Un'equazione lineare in seno e coseno $a\\sin x + b\\cos x = c$ si risolve comodamente con:",
+                options: [
+                    "Il metodo di scomposizione",
+                    "Il metodo dell'angolo aggiunto",
+                    "Le formule di bisezione",
+                    "Esclusivamente per via grafica"
+                ],
+                correct: 1, explanation: "L'angolo aggiunto riconduce l'equazione lineare a una singola funzione sinusoidale."
+            },
+            {
+                id: 23, category: "Equazioni Goniometriche",
+                question: "L'equazione $\\tan x = \\sqrt{3}$ in $\\mathbb{R}$ ha come soluzione generale:",
+                options: [
+                    "x = \\frac{\\pi}{3} + k\\pi",
+                    "x = \\frac{\\pi}{6} + k\\pi",
+                    "x = \\frac{\\pi}{3} + 2k\\pi",
+                    "x = \\frac{2\\pi}{3} + k\\pi"
+                ],
+                correct: 0, explanation: "La tangente ha periodo $\\pi$, quindi $\\frac{\\pi}{3} + k\\pi$."
+            },
+            {
+                id: 24, category: "Equazioni Goniometriche",
+                question: "L'equazione $\\cos(2x) = \\sin x$ si risolve facilmente trasformandola in un'equazione in:",
+                options: ["\\cos x", "\\sin x", "\\tan x", "\\cot x"],
+                correct: 1, explanation: "Sostituendo $\\cos(2x) = 1 - 2\\sin^2 x$, l'equazione diventa di secondo grado in $\\sin x$."
+            },
+
+            // TRIGONOMETRIA (25-30)
+            {
+                id: 25, category: "Trigonometria",
+                question: "In un triangolo rettangolo con ipotenusa $c$ e angolo acuto $\\alpha$, il cateto $a$ opposto ad $\\alpha$ vale:",
+                options: ["c \\cos\\alpha", "c \\sin\\alpha", "\\frac{c}{\\sin\\alpha}", "c \\tan\\alpha"],
+                correct: 1, explanation: "Il cateto opposto è dato da $a = c \\cdot \\sin\\alpha$."
+            },
+            {
+                id: 26, category: "Trigonometria",
+                question: "Il Teorema dei Seni stabilisce che in un triangolo $ABC$:",
+                options: [
+                    "\\frac{a}{\\sin\\alpha} = \\frac{b}{\\sin\\beta} = \\frac{c}{\\sin\\gamma}",
+                    "a^2 = b^2 + c^2 - 2bc\\cos\\alpha",
+                    "\\text{Area} = \\frac{1}{2}ab\\sin\\gamma",
+                    "a = b\\cos\\gamma + c\\cos\\beta"
+                ],
+                correct: 0, explanation: "Il rapporto tra ciascun lato e il seno dell'angolo opposto è costante."
+            },
+            {
+                id: 27, category: "Trigonometria",
+                question: "Il Teorema di Carnot (o del Coseno) afferma che:",
+                options: [
+                    "\\frac{a}{\\sin\\alpha} = 2R",
+                    "a^2 = b^2 + c^2 - 2bc\\cos\\alpha",
+                    "a = b\\sin\\alpha",
+                    "\\alpha + \\beta + \\gamma = \\pi"
+                ],
+                correct: 1, explanation: "È la generalizzazione del teorema di Pitagora: $a^2 = b^2 + c^2 - 2bc\\cos\\alpha$."
+            },
+            {
+                id: 28, category: "Trigonometria",
+                question: "L'area di un triangolo $ABC$ conoscendo due lati $a$ e $b$ e l'angolo compreso $\\gamma$ è:",
+                options: [
+                    "\\frac{1}{2}ab\\sin\\gamma",
+                    "\\frac{1}{2}ab\\cos\\gamma",
+                    "ab\\sin\\gamma",
+                    "\\frac{1}{2}ab\\tan\\gamma"
+                ],
+                correct: 0, explanation: "La formula trigonometrica dell'area è $\\text{Area} = \\frac{1}{2}ab\\sin\\gamma$."
+            },
+            {
+                id: 29, category: "Trigonometria",
+                question: "In un triangolo rettangolo, se i cateti misurano $3\\text{ cm}$ e $4\\text{ cm}$, l'ipotenusa misura:",
+                options: ["5\\text{ cm}", "7\\text{ cm}", "\\sqrt{7}\\text{ cm}", "25\\text{ cm}"],
+                correct: 0, explanation: "Per il teorema di Pitagora: $\\sqrt{3^2 + 4^2} = \\sqrt{25} = 5$."
+            },
+            {
+                id: 30, category: "Trigonometria",
+                question: "Se in un triangolo $a = 14$, $\\alpha = 45^\\circ$ e $\\beta = 60^\\circ$, applicando il Teorema dei Seni, $\\frac{b}{\\sin(60^\\circ)}$ è uguale a:",
+                options: [
+                    "14",
+                    "\\frac{14}{\\sin(45^\\circ)}",
+                    "14\\sin(45^\\circ)",
+                    "14\\sqrt{3}"
+                ],
+                correct: 1, explanation: "Dall'uguaglianza $\\frac{a}{\\sin\\alpha} = \\frac{b}{\\sin\\beta}$, si ricava $\\frac{b}{\\sin\\beta} = \\frac{a}{\\sin\\alpha} = \\frac{14}{\\sin(45^\\circ)}$."
+            }
+        ];
+
+        let score = 0;
+        let answeredCount = 0;
+        const userAnswers = {};
+
+        function renderQuiz() {
+            const container = document.getElementById('quiz-container');
+            container.innerHTML = '';
+
+            questions.forEach((q, qIndex) => {
+                const card = document.createElement('div');
+                card.className = 'bg-slate-800 border border-slate-700 rounded-2xl p-6 shadow-xl';
+                
+                let optionsHtml = '';
+                q.options.forEach((opt, oIndex) => {
+                    optionsHtml += `
+                        <button onclick="handleAnswer(${qIndex}, ${oIndex})" id="q${qIndex}-opt${oIndex}" 
+                            class="w-full text-left px-4 py-3 rounded-xl border border-slate-700 bg-slate-900 hover:bg-slate-700 transition text-slate-200 font-medium text-sm flex items-center justify-between">
+                            <span>$${opt}$</span>
+                            <span id="q${qIndex}-icon${oIndex}" class="text-lg"></span>
+                        </button>
+                    `;
+                });
+
+                card.innerHTML = `
+                    <div class="flex justify-between items-center mb-3">
+                        <span class="text-xs font-bold uppercase tracking-wider px-3 py-1 bg-slate-900 text-cyan-400 rounded-full border border-slate-700">${q.category}</span>
+                        <span class="text-sm font-semibold text-slate-400">Domanda ${q.id} di 30</span>
+                    </div>
+                    <h3 class="text-lg font-bold text-slate-100 mb-4">$${q.question}$</h3>
+                    <div class="space-y-2 mb-4" id="q${qIndex}-options">
+                        ${optionsHtml}
+                    </div>
+                    <div id="q${qIndex}-feedback" class="hidden mt-3 p-4 rounded-xl text-sm font-medium"></div>
+                `;
+                container.appendChild(card);
+            });
+
+            if (window.MathJax) {
+                window.MathJax.typesetPromise();
+            }
+        }
+
+        function handleAnswer(qIndex, selectedOption) {
+            if (userAnswers[qIndex] !== undefined) return; // Già risposto
+
+            userAnswers[qIndex] = selectedOption;
+            answeredCount++;
+            document.getElementById('answered').textContent = answeredCount;
+
+            const q = questions[qIndex];
+            const feedbackDiv = document.getElementById(`q${qIndex}-feedback`);
+            
+            for (let i = 0; i < q.options.length; i++) {
+                const btn = document.getElementById(`q${qIndex}-opt${i}`);
+                btn.disabled = true;
+                btn.classList.remove('hover:bg-slate-700');
+                if (i === q.correct) {
+                    btn.classList.add('bg-emerald-950', 'border-emerald-600', 'text-emerald-200');
+                    document.getElementById(`q${qIndex}-icon${i}`).textContent = '✅';
+                } else if (i === selectedOption) {
+                    btn.classList.add('bg-rose-950', 'border-rose-600', 'text-rose-200');
+                    document.getElementById(`q${qIndex}-icon${i}`).textContent = '❌';
+                }
+            }
+
+            feedbackDiv.classList.remove('hidden');
+            if (selectedOption === q.correct) {
+                score++;
+                document.getElementById('score').textContent = score;
+                feedbackDiv.className = 'mt-3 p-4 rounded-xl text-sm font-medium bg-emerald-950 border border-emerald-700 text-emerald-200';
+                feedbackDiv.innerHTML = `<strong>Corretto! 🎉</strong> ${q.explanation}`;
+            } else {
+                feedbackDiv.className = 'mt-3 p-4 rounded-xl text-sm font-medium bg-rose-950 border border-rose-700 text-rose-200';
+                feedbackDiv.innerHTML = `<strong>Sbagliato ❌</strong> ${q.explanation}`;
+            }
+
+            if (window.MathJax) {
+                window.MathJax.typesetPromise();
+            }
+        }
+
+        function resetQuiz() {
+            score = 0;
+            answeredCount = 0;
+            for (const k in userAnswers) delete userAnswers[k];
+            document.getElementById('score').textContent = score;
+            document.getElementById('answered').textContent = answeredCount;
+            renderQuiz();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        window.onload = renderQuiz;
+    </script>
+</body>
+</html>
